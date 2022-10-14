@@ -23,7 +23,9 @@ initialModel =
 -- view : Model -> Html msg
 view model =
     div []
-        [ h1 [] [ text "Scoreboard" ] ]
+        [ h1 [] [ text "Scoreboard" ] 
+        ]
+
 
 
 -- MAIN 

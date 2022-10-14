@@ -1,6 +1,8 @@
 **- How to run this app:**
 
-`elm reactor`
+- run app: `elm reactor`
+
+- start server: `http-server server -a localhost -p 5016`
 
 **How to use external CSS**
 

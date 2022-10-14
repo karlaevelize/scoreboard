@@ -1,9 +1,13 @@
 module Signup exposing (User)
 
+import Browser
 import VirtualDom
 import Css exposing (..)
 import Html.Styled exposing (..)
 import Html.Styled.Attributes exposing (..)
+import Html.Styled.Events exposing (onClick, onInput)
+
+-- MODEL 
 
 type alias User =
     { name : String
@@ -20,33 +24,64 @@ initialModel =
     , loggedIn = False
     }
 
-view : User -> Html msg
+-- VIEW
+
+view : User -> Html Msg
 view user =
     div []
       [ h1 [ css [ paddingLeft (cm 3) ] ] [ text "Sign up" ]
       , styledForm []
           [ div []
               [ text "Name"
-              , styledInput [ id "name", type_ "text" ] []
+              , styledInput [ id "name", type_ "text", onInput SaveName ][]
               ]
           , div []
               [ text "Email"
-              , styledInput [ id "email", type_ "email" ] []
+              , styledInput [ id "email", type_ "email", onInput SaveEmail ][]
               ]
           , div []
               [ text "Password"
-              , styledInput [ id "password", type_ "password" ] []
+              , styledInput [ id "password", type_ "password", onInput SavePassword ][]
               ]
           , div []
-              [ styledButton [ type_ "submit" ]
+              [ styledButton [ type_ "submit" , onClick Signup]
                   [ text "Create my account" ]
               ]
           ]
       ]
 
-main : VirtualDom.Node msg
+type Msg 
+    = SaveName String
+    | SaveEmail String
+    | SavePassword String
+    | Signup
+
+-- UPDATE
+
+update : Msg -> User -> User
+update message user =
+    case message of
+        SaveName name ->
+            { user | name = name }
+
+        SaveEmail email ->
+            { user | email = email }
+
+        SavePassword password ->
+            { user | password = password }
+
+        Signup ->
+            { user | loggedIn = True }
+
+
+main : Program () User Msg
 main =
-    toUnstyled <| view initialModel
+    Browser.sandbox
+        { init = initialModel
+        , view = view >> toUnstyled -- same as: view = \model -> toUnstyled (view model) 
+        , update = update
+        }
+
 
 styledForm : List (Attribute msg) -> List (Html msg) -> Html msg
 styledForm =
